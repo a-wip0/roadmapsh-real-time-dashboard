@@ -1,4 +1,5 @@
 import { AuthForm } from './components/AuthForm'
+import { Leaderboard } from './components/Leaderboard'
 import { useAuth } from './auth-context'
 
 export default function App() {
@@ -13,7 +14,10 @@ export default function App() {
           </span>
         )}
       </header>
-      <main>{token ? <p>Signed in as {username}.</p> : <AuthForm />}</main>
+      <main>
+        <Leaderboard username={username} />
+        {!token && <AuthForm />}
+      </main>
     </>
   )
 }
