@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package leaderboard.v1;
+
+option go_package = "github.com/a-wip0/roadmapsh-real-time-dashboard/gen/leaderboard/v1;leaderboardv1";
+
+// Ingest is the trusted, internal write path for game servers and simulators.
+// Callers authenticate with the `x-api-key` metadata header. Scores can only
+// be submitted for players that already exist (registered via the REST API).
+service Ingest {
+  // SubmitScore records one score. Errors: INVALID_ARGUMENT for a bad game or
+  // score, NOT_FOUND for an unknown player, UNAUTHENTICATED for a bad key.
+  rpc SubmitScore(SubmitScoreRequest) returns (SubmitScoreResponse);
+
+  // StreamScores ingests many scores over one connection. Invalid or unknown-
+  // player entries are counted as rejected instead of aborting the stream.
+  rpc StreamScores(stream SubmitScoreRequest) returns (StreamSummary);
+}
+
+message SubmitScoreRequest {
+  string username = 1;
+  string game = 2;
+  int64 score = 3;
+}
+
+message SubmitScoreResponse {
+  string game = 1;
+  int64 score = 2;
+  int64 personal_best = 3;
+  bool new_personal_best = 4;
+  int64 game_rank = 5;
+  int64 global_rank = 6;
+}
+
+message StreamSummary {
+  int64 accepted = 1;
+  int64 rejected = 2;
+}
