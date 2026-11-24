@@ -1,7 +1,12 @@
 # Real-time Leaderboard System
 
 Solution for the [roadmap.sh Realtime Leaderboard System](https://roadmap.sh/projects/realtime-leaderboard-system) project.
-Go + Redis sorted sets (rankings) + SQLite (users and score history) + JWT auth.
+Go + Redis sorted sets (rankings) + SQLite (users and score history) + JWT auth, with a React + TypeScript front end.
+
+```
+backend/    Go API (net/http, Redis, SQLite)
+frontend/   Vite + React + TypeScript UI
+```
 
 ## Run
 
@@ -13,6 +18,18 @@ go test ./...                                 # needs Redis on localhost:6379 (u
 ```
 
 Env vars: `ADDR` (`:8080`), `REDIS_URL` (`redis://localhost:6379/0`), `DB_PATH` (`leaderboard.db`), `JWT_SECRET`, `TEST_REDIS_URL`.
+
+### Front end
+
+```bash
+cd frontend
+npm install
+npm run dev        # http://localhost:5173, proxies /api/* to the backend on :8080
+npm run build      # type-check + production bundle in frontend/dist
+```
+
+Set `BACKEND_URL` if the API isn't on `http://localhost:8080`. The UI covers login/register, a live global/per-game
+leaderboard (SSE), score submission with rank feedback, your history, and the top-players report.
 
 ## API
 
