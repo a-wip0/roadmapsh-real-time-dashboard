@@ -11,6 +11,9 @@ func (a *App) Handler() http.Handler {
 	m.HandleFunc("POST /auth/login", a.login)
 	m.Handle("POST /scores", a.auth(a.submit))
 	m.Handle("GET /scores/history", a.auth(a.history))
+	m.HandleFunc("GET /leaderboard", a.globalBoard)
+	m.HandleFunc("GET /leaderboard/{game}", a.gameBoard)
+	m.Handle("GET /rankings/me", a.auth(a.myRank))
 	return m
 }
 
