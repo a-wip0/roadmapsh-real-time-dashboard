@@ -1,0 +1,7 @@
+# Redis only: run the backend, frontend and simulator on the host (see README).
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
