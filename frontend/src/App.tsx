@@ -1,9 +1,13 @@
+import { useState } from 'react'
 import { AuthForm } from './components/AuthForm'
 import { Leaderboard } from './components/Leaderboard'
+import { MyActivity } from './components/MyActivity'
+import { ScoreForm } from './components/ScoreForm'
 import { useAuth } from './auth-context'
 
 export default function App() {
   const { token, username, logout } = useAuth()
+  const [refreshKey, setRefreshKey] = useState(0)
   return (
     <>
       <header className="top">
@@ -16,7 +20,14 @@ export default function App() {
       </header>
       <main>
         <Leaderboard username={username} />
-        {!token && <AuthForm />}
+        {token ? (
+          <>
+            <ScoreForm token={token} onSubmitted={() => setRefreshKey((k) => k + 1)} />
+            <MyActivity token={token} refreshKey={refreshKey} />
+          </>
+        ) : (
+          <AuthForm />
+        )}
       </main>
     </>
   )
