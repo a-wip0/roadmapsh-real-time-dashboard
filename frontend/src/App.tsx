@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AuthForm } from './components/AuthForm'
 import { Leaderboard } from './components/Leaderboard'
 import { MyActivity } from './components/MyActivity'
+import { Report } from './components/Report'
 import { ScoreForm } from './components/ScoreForm'
 import { useAuth } from './auth-context'
 
@@ -28,6 +29,7 @@ export default function App() {
         ) : (
           <AuthForm />
         )}
+        <Report refreshKey={refreshKey} />
       </main>
     </>
   )
