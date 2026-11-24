@@ -7,6 +7,7 @@ Go + Redis sorted sets (rankings) + SQLite (users and score history) + JWT auth.
 
 ```bash
 redis-server --daemonize yes
+cd backend
 JWT_SECRET=change-me go run ./cmd/server      # listens on :8080
 go test ./...                                 # needs Redis on localhost:6379 (uses DB 15, flushes it)
 ```
