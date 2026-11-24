@@ -15,6 +15,7 @@ func (a *App) Handler() http.Handler {
 	m.HandleFunc("GET /leaderboard/stream", a.stream)
 	m.HandleFunc("GET /leaderboard/{game}", a.gameBoard)
 	m.Handle("GET /rankings/me", a.auth(a.myRank))
+	m.HandleFunc("GET /reports/top-players", a.report)
 	return m
 }
 
