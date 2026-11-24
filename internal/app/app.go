@@ -20,6 +20,7 @@ type App struct {
 	rdb   *redis.Client
 	db    *sql.DB
 	score *redis.Script
+	hub   *hub
 }
 
 func New(cfg Config) (*App, error) {
@@ -32,7 +33,7 @@ func New(cfg Config) (*App, error) {
 		return nil, err
 	}
 	db.SetMaxOpenConns(1) // SQLite: single writer
-	a := &App{cfg: cfg, rdb: redis.NewClient(opt), db: db, score: redis.NewScript(submitLua)}
+	a := &App{cfg: cfg, rdb: redis.NewClient(opt), db: db, score: redis.NewScript(submitLua), hub: newHub()}
 	if err := a.migrate(); err != nil {
 		return nil, err
 	}

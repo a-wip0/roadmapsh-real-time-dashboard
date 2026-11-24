@@ -30,6 +30,9 @@ func (a *App) submit(w http.ResponseWriter, r *http.Request, user string) {
 		errJSON(w, 502, "leaderboard unavailable")
 		return
 	}
+	if improved {
+		a.broadcast()
+	}
 	g, _, _ := a.rank(r.Context(), gameKey(req.Game), user)
 	gl, _, _ := a.rank(r.Context(), globalKey, user)
 	writeJSON(w, 201, map[string]any{
