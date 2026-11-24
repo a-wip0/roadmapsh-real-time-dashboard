@@ -13,6 +13,8 @@ type Config struct {
 	RedisURL  string
 	DBPath    string
 	JWTSecret string
+	// IngestKey authenticates gRPC callers; empty disables the gRPC API.
+	IngestKey string
 }
 
 type App struct {

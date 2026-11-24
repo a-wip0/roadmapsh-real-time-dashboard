@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -24,6 +25,7 @@ func main() {
 		RedisURL:  env("REDIS_URL", "redis://localhost:6379/0"),
 		DBPath:    env("DB_PATH", "leaderboard.db"),
 		JWTSecret: env("JWT_SECRET", "dev-secret-change-me"),
+		IngestKey: os.Getenv("INGEST_API_KEY"),
 	}
 	srv, err := app.New(cfg)
 	if err != nil {
@@ -38,6 +40,24 @@ func main() {
 			log.Fatal(err)
 		}
 	}()
+
+	if cfg.IngestKey != "" {
+		addr := env("GRPC_ADDR", ":9090")
+		lis, err := net.Listen("tcp", addr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		gs := srv.GRPCServer()
+		defer gs.Stop()
+		go func() {
+			log.Printf("gRPC ingest listening on %s", addr)
+			if err := gs.Serve(lis); err != nil {
+				log.Fatal(err)
+			}
+		}()
+	} else {
+		log.Print("INGEST_API_KEY not set: gRPC ingest disabled")
+	}
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
