@@ -9,6 +9,8 @@ func (a *App) Handler() http.Handler {
 	m := http.NewServeMux()
 	m.HandleFunc("POST /auth/register", a.register)
 	m.HandleFunc("POST /auth/login", a.login)
+	m.Handle("POST /scores", a.auth(a.submit))
+	m.Handle("GET /scores/history", a.auth(a.history))
 	return m
 }
 
